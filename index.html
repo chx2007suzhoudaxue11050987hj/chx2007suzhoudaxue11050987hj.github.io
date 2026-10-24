@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOUR NAME · AI Agent 使用报告</title>
+  <meta name="description" content="苏州大学人工智能专业学生的个人主页，记录使用 TRAE 的实践与协作心得。">
+  <meta name="theme-color" content="#07080c">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="#home">
+        <span class="logo-mark">Y</span>
+        <span class="logo-text">YOUR NAME</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#about">关于</a>
+        <a href="#report">Agent 报告</a>
+        <a href="#work">项目</a>
+        <a href="#contact" class="nav-cta">联系我</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section id="home" class="hero">
+      <div class="hero-copy">
+        <p class="kicker">// AI UNDERGRAD · SOOCHOW UNIVERSITY</p>
+        <h1>你好，我是<br><span class="grad">YOUR NAME</span></h1>
+        <p class="lead">
+          苏州大学人工智能专业大一学生。比起背概念，我更喜欢把一个想法做成能跑起来的东西：
+          写页面、接 API、让 TRAE 补上不熟的部分，然后在报错里学。
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#report">看看我的 TRAE 报告</a>
+          <a class="btn btn-ghost" href="#work">查看项目</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><strong>2026</strong><span>级 · AI 专业</span></div>
+          <div class="stat"><strong>1</strong><span>个主力 Agent · TRAE</span></div>
+          <div class="stat"><strong>12</strong><span>个在跑的小项目</span></div>
+        </div>
+      </div>
+
+      <div class="terminal reveal" aria-label="Agent 协作示例">
+        <div class="terminal-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="terminal-title">agent-session — ~/personal-site</span>
+        </div>
+        <pre class="terminal-body"><span class="tl-cmd">$ trae run --task "build my personal site"</span>
+<span class="tl-dim">›</span> 分析需求 · 拆解任务 <span class="tl-ok">ok</span>
+<span class="tl-dim">›</span> 生成页面结构与样式 <span class="tl-ok">ok</span>
+<span class="tl-dim">›</span> 写入 3 个文件 <span class="tl-ok">ok</span>
+<span class="tl-dim">›</span> 自检 · 响应式校验 <span class="tl-ok">ok</span>
+
+<span class="tl-ok">✓ done in 42s</span>  <span class="tl-dim">— 1 agent, 0 errors</span>
+<span class="tl-cmd">$</span> <span class="cursor" aria-hidden="true"></span></pre>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="about" class="section">
+      <div class="section-head reveal">
+        <p class="kicker">01 / ABOUT</p>
+        <h2>先做出来，再弄懂它</h2>
+        <p class="sub">关于我，以及我目前在做的事。</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>
+            我在苏州大学读人工智能，大一。课上在补数学和编程的底子，课下更愿意直接动手：
+            从一个具体的需求出发，边查边写，先让东西跑起来，再回头理解它为什么能跑。
+          </p>
+          <p>
+            TRAE 是我学习方式的一部分。我把需求拆成可验收的小步骤交给它，自己负责判断、
+            审阅和收尾。用得越多越清楚：它擅长体力活，判断和品味仍然得自己来。
+          </p>
+          <div class="chips">
+            <span>Python</span><span>C++</span><span>HTML / CSS / JS</span>
+            <span>Git</span><span>PyTorch（入门）</span><span>Prompt 设计</span>
+            <span>数据处理</span>
+          </div>
+        </div>
+
+        <aside class="about-side reveal">
+          <div class="card edu-card">
+            <p class="mini-label">EDUCATION</p>
+            <h3>苏州大学</h3>
+            <p class="muted">人工智能 · 本科 · 2026 – 2030</p>
+            <hr>
+            <div class="fact"><span>方向</span><strong>机器学习 / 前端工程</strong></div>
+            <div class="fact"><span>正在学</span><strong>Python · PyTorch 基础</strong></div>
+            <div class="fact"><span>工作方式</span><strong>TRAE 加速，自己审阅</strong></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ AGENT REPORT ============ -->
+    <section id="report" class="section">
+      <div class="section-head reveal">
+        <p class="kicker">02 / AGENT REPORT</p>
+        <h2>我的 TRAE 使用报告</h2>
+        <p class="sub">统计周期 2026.09 – 2026.10 · 近 8 周 · 基于 TRAE 的协作会话记录</p>
+      </div>
+
+      <div class="kpis reveal" id="kpis"></div>
+
+      <div class="report-grid">
+        <article class="card chart-card reveal">
+          <h3>使用场景占比</h3>
+          <p class="card-sub">按与 TRAE 的协作会话统计</p>
+          <div class="donut-wrap">
+            <div class="donut-chart" id="donutChart" role="img" aria-label="TRAE 使用场景占比环形图"></div>
+            <div class="donut-center"><strong>214</strong><span>次协作</span></div>
+          </div>
+          <ul class="legend" id="donutLegend"></ul>
+        </article>
+
+        <article class="card chart-card reveal">
+          <h3>每周协作次数</h3>
+          <p class="card-sub">开学后逐步形成稳定节奏，第 8 周达到峰值</p>
+          <div class="bars" id="barChart" role="img" aria-label="最近 8 周每周协作次数柱状图"></div>
+        </article>
+      </div>
+
+      <div class="agent-grid" id="agentGrid"></div>
+
+      <div class="insights">
+        <article class="insight reveal">
+          <span class="num">01</span>
+          <h3>先讲目标，再让它动手</h3>
+          <p>开局只描述方向和验收标准，不把每个细节都规定死。给 TRAE 留出判断空间，往往能补上我自己没想到的部分。</p>
+        </article>
+        <article class="insight reveal">
+          <span class="num">02</span>
+          <h3>小步验收，别一次交付整个项目</h3>
+          <p>先让它完成一个能打开、能跑的最小页面，确认方向对了再铺开。一次性要一个大系统，返工成本通常最高。</p>
+        </article>
+        <article class="insight reveal">
+          <span class="num">03</span>
+          <h3>判断权始终在自己手里</h3>
+          <p>生成的每一行代码都要能解释。看不懂就先问明白，再决定要不要留 —— 这是目前最有效的学习方式。</p>
+        </article>
+      </div>
+
+      <p class="report-note">
+        数据说明：会话次数、节省时间等为本人记录的示例数据，可在 <code>script.js</code> 的
+        <code>REPORT</code> 对象中替换为你的真实数据。
+      </p>
+    </section>
+
+    <!-- ============ WORK ============ -->
+    <section id="work" class="section">
+      <div class="section-head reveal">
+        <p class="kicker">03 / PROJECTS</p>
+        <h2>在跑的小项目</h2>
+        <p class="sub">都是边学边做的，代码不一定漂亮，但都能用。</p>
+      </div>
+
+      <div class="work-grid">
+        <article class="work-card reveal">
+          <p class="work-index">01</p>
+          <h3>校园二手交易平台</h3>
+          <p>把闲置教材和专业书流转起来：发布、搜索、站内私信，按学院和课程筛选。练手全栈的第一站。</p>
+          <div class="work-tags"><span>Vue</span><span>Node</span><span>SQLite</span></div>
+          <a class="work-link" href="#">查看项目 →</a>
+        </article>
+        <article class="work-card reveal">
+          <p class="work-index">02</p>
+          <h3>课程知识库问答</h3>
+          <p>把课件、笔记和往年题切片入库，用检索 + LLM 回答课程问题，答案附上出处，方便回去看原文。</p>
+          <div class="work-tags"><span>Python</span><span>RAG</span><span>向量检索</span></div>
+          <a class="work-link" href="#">查看项目 →</a>
+        </article>
+        <article class="work-card reveal">
+          <p class="work-index">03</p>
+          <h3>Agent 使用报告</h3>
+          <p>就是这个页面：把 8 周与 TRAE 的协作数据做成可读的报告，顺便练一遍 SVG 图表与滚动动效。</p>
+          <div class="work-tags"><span>HTML / CSS</span><span>JavaScript</span><span>SVG</span></div>
+          <a class="work-link" href="#report">查看报告 →</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section">
+      <div class="contact-card reveal">
+        <p class="kicker">04 / CONTACT</p>
+        <h2>一起做点有意思的东西</h2>
+        <p class="sub">项目合作、Agent 使用心得，或者只是聊聊 AI，都欢迎。</p>
+        <a class="mail" href="mailto:your@email.com">your@email.com</a>
+        <div class="socials">
+          <a href="#">GitHub</a>
+          <a href="#">即刻</a>
+          <a href="#">微信：your_wechat</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© <span id="year">2026</span> YOUR NAME</span>
+      <span class="footer-mono">Built with HTML / CSS / JS · no framework</span>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
