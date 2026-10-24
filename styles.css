@@ -687,7 +687,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .socials { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
 
-.socials a {
+.socials a,
+.socials span {
   font-family: var(--mono);
   font-size: 0.75rem;
   padding: 7px 16px;
