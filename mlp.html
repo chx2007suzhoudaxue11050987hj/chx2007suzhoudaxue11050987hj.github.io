@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>常欢笑 · MLP 学习参数可视化</title>
+  <meta name="description" content="用原生 JavaScript 手写 2→2→1 多层感知机，在 XOR 上训练并可视化权重、损失、决策边界与学习率的影响。">
+  <meta name="theme-color" content="#07080c">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="mlp.css">
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-mark">常</span>
+        <span class="logo-text">常欢笑</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html">首页</a>
+        <a href="#net">前向传播</a>
+        <a href="#lab">训练台</a>
+        <a href="#params">参数表</a>
+        <a href="index.html#contact" class="nav-cta">联系我</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero lab-hero">
+      <div class="hero-copy">
+        <p class="kicker">// 作业 02 · MLP LEARNING PARAMETERS</p>
+        <h1>看见 MLP<br><span class="grad">怎样学会参数</span></h1>
+        <p class="lead">
+          一个 2→2→1 的多层感知机，在 XOR 的四个点上学分类。
+          前向传播、反向传播、参数更新全部用原生 JavaScript 手写，没有调用任何深度学习库 ——
+          所以每一个权重为什么变成现在这样，都能在页面上看得见。
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#lab">进入训练台</a>
+          <a class="btn btn-ghost" href="#net">先看一次预测</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><strong>2→2→1</strong><span>输入 → 隐藏 → 输出</span></div>
+          <div class="stat"><strong>4</strong><span>个 XOR 样本</span></div>
+          <div class="stat"><strong>0</strong><span>个外部依赖</span></div>
+        </div>
+      </div>
+
+      <div class="card hero-formula">
+        <p class="mini-label">FORWARD PASS</p>
+        <div class="formula">
+          <p><span class="fx">z</span> = xW<sup>(1)</sup> + b<sup>(1)</sup></p>
+          <p><span class="fx">h</span> = σ(z)</p>
+          <p><span class="fx">ŷ</span> = σ(hv + c)</p>
+        </div>
+        <hr>
+        <p class="formula-note">
+          隐藏层把二维输入抬到新的特征空间，输出层在那里画一条直线 ——
+          XOR 不能一刀切开，但“先升维、再切一刀”就可以。
+        </p>
+        <div class="formula-legend">
+          <span><i class="sw up"></i>正权重</span>
+          <span><i class="sw down"></i>负权重</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 前向传播 ============ -->
+    <section id="net" class="section">
+      <div class="section-head reveal">
+        <p class="kicker">01 / FORWARD PASS</p>
+        <h2>参数如何参与一次预测</h2>
+        <p class="sub">点一个样本，看它从输入一路算到概率。线的粗细表示权重绝对值，蓝色为正、橙色为负。</p>
+      </div>
+
+      <div class="net-grid">
+        <article class="card net-card reveal">
+          <div class="net-head">
+            <h3>网络结构</h3>
+            <span class="net-badge" id="netBadge">2 → 2 → 1</span>
+          </div>
+          <svg id="netSvg" viewBox="0 0 560 320" role="img" aria-label="多层感知机结构与当前权重"></svg>
+          <p class="net-foot">节点内的数字是当前激活值；连线旁的数字是对应权重。</p>
+        </article>
+
+        <article class="card reveal">
+          <h3>四个样本的预测</h3>
+          <p class="card-sub">点击一行，左侧网络与下方推导会切换到该样本</p>
+          <div class="sample-list" id="sampleList"></div>
+          <div class="sample-note" id="sampleNote"></div>
+        </article>
+      </div>
+
+      <article class="card step-card reveal">
+        <div class="step-head">
+          <h3>一次前向传播的每一步</h3>
+          <span class="step-tag" id="stepTag">样本 [0, 0]</span>
+        </div>
+        <div class="steps" id="steps"></div>
+      </article>
+    </section>
+
+    <!-- ============ 训练台 ============ -->
+    <section id="lab" class="section">
+      <div class="section-head reveal">
+        <p class="kicker">02 / TRAINING LAB</p>
+        <h2>训练台：自己调学习参数</h2>
+        <p class="sub">全批量二元交叉熵 + 反向传播。改学习率、隐藏单元、初始化幅度和优化器，观察损失与决策边界怎么变。</p>
+      </div>
+
+      <div class="lab-grid">
+        <aside class="card control-card reveal">
+          <h3>超参数</h3>
+
+          <div class="ctrl">
+            <label for="lr">学习率 <output id="lrOut">3.00</output></label>
+            <input type="range" id="lr" min="0" max="100" step="1" value="75">
+            <p class="ctrl-hint" id="lrHint">小 → 学得慢；大 → 震荡甚至发散</p>
+          </div>
+
+          <div class="ctrl-row">
+            <div class="ctrl">
+              <label for="units">隐藏单元</label>
+              <select id="units">
+                <option value="2" selected>2 个</option>
+                <option value="3">3 个</option>
+                <option value="4">4 个</option>
+                <option value="6">6 个</option>
+              </select>
+            </div>
+            <div class="ctrl">
+              <label for="scale">初始化幅度</label>
+              <select id="scale">
+                <option value="0.5">±0.5</option>
+                <option value="1" selected>±1.0</option>
+                <option value="2">±2.0</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ctrl">
+            <label for="opt">优化器</label>
+            <select id="opt">
+              <option value="gd" selected>梯度下降 GD</option>
+              <option value="momentum">动量 Momentum</option>
+              <option value="adam">Adam</option>
+            </select>
+          </div>
+
+          <div class="ctrl">
+            <label for="speed">每帧步数 <output id="speedOut">10</output></label>
+            <input type="range" id="speed" min="1" max="60" step="1" value="10">
+          </div>
+
+          <div class="ctrl-btns">
+            <button class="btn btn-primary" id="playBtn" type="button">开始训练</button>
+            <button class="btn btn-ghost" id="stepBtn" type="button">单步</button>
+            <button class="btn btn-ghost" id="resetBtn" type="button">重置</button>
+          </div>
+
+          <p class="ctrl-note">切换隐藏单元 / 初始化 / 优化器会从头训练；学习率可随时调整。</p>
+        </aside>
+
+        <div class="lab-main">
+          <div class="metrics reveal" id="metrics">
+            <div class="kpi"><div class="value" id="mEpoch">0</div><div class="label">训练轮次</div></div>
+            <div class="kpi"><div class="value" id="mLoss">0.693</div><div class="label">损失 BCE</div></div>
+            <div class="kpi"><div class="value" id="mAcc">50<em>%</em></div><div class="label">XOR 准确率</div></div>
+            <div class="kpi"><div class="value" id="mW">—</div><div class="label">最大 |权重|</div></div>
+          </div>
+
+          <div class="chart-grid">
+            <article class="card chart-card reveal">
+              <h3>损失曲线</h3>
+              <p class="card-sub">纵轴二元交叉熵，圆点是当前轮次</p>
+              <canvas id="lossChart" width="1040" height="440" role="img" aria-label="训练损失随轮次变化的曲线"></canvas>
+            </article>
+            <article class="card chart-card reveal">
+              <h3>决策边界</h3>
+              <p class="card-sub">背景是模型输出的 P(1)，四个点是 XOR 样本</p>
+              <canvas id="boundary" width="640" height="640" role="img" aria-label="XOR 决策边界热力图与四个样本"></canvas>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 参数表 ============ -->
+    <section id="params" class="section">
+      <div class="section-head reveal">
+        <p class="kicker">03 / PARAMETERS</p>
+        <h2>当前所有可学习参数</h2>
+        <p class="sub">权重与偏置共 <span id="paramCount">9</span> 个；梯度是这一次全批量反向传播算出的值。</p>
+      </div>
+
+      <article class="card reveal">
+        <div class="table-wrap">
+          <table class="param-table">
+            <thead>
+              <tr><th>参数</th><th>形状 / 位置</th><th>当前值</th><th>梯度</th></tr>
+            </thead>
+            <tbody id="paramBody"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- ============ 结论 ============ -->
+    <section id="notes" class="section">
+      <div class="section-head reveal">
+        <p class="kicker">04 / WHAT I LEARNED</p>
+        <h2>调参之后的三点结论</h2>
+        <p class="sub">下面这些不是背来的，是在这个页面上把参数改坏、再改好得到的。</p>
+      </div>
+
+      <div class="insights">
+        <article class="insight reveal">
+          <span class="num">01</span>
+          <h3>学习率决定“学得动”还是“学飞了”</h3>
+          <p>0.1 时三百轮几乎没动；3 附近能稳定降到 0.02 以下；15 时损失先冲高，然后卡在半路不再下降。同一份梯度，乘上不同的步长，结果完全不同。</p>
+        </article>
+        <article class="insight reveal">
+          <span class="num">02</span>
+          <h3>初始化必须打破对称</h3>
+          <p>如果把两个隐藏单元的权重设成完全一样，它们会一直得到相同梯度、保持镜像，网络退化成只有一个单元。随机初始化不是可选步骤。</p>
+        </article>
+        <article class="insight reveal">
+          <span class="num">03</span>
+          <h3>XOR 需要“升维”才可分</h3>
+          <p>二维空间里一条直线切不开对角的两类点。隐藏层把四个点搬到新空间后，输出层的一条直线就够用了 —— 这就是隐藏层的意义。</p>
+        </article>
+      </div>
+
+      <article class="card compare-card reveal">
+        <div class="compare-head">
+          <div>
+            <h3>学习率对比实验</h3>
+            <p class="card-sub">相同初始化、相同 GD，只改学习率，各跑 300 轮</p>
+          </div>
+          <button class="btn btn-ghost" id="compareBtn" type="button">跑一次对比</button>
+        </div>
+        <canvas id="compareChart" width="1040" height="400" role="img" aria-label="三种学习率下的损失曲线对比"></canvas>
+        <ul class="compare-legend" id="compareLegend"></ul>
+      </article>
+
+      <p class="report-note">
+        实现说明：前向、反向传播、BCE 与三种优化器均为手写；初始化使用固定随机种子，保证对比实验可复现。
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© <span id="year">2026</span> 常欢笑 · 机器学习作业 02</span>
+      <span class="footer-mono">HTML / CSS / JS · 手写反向传播</span>
+    </div>
+  </footer>
+
+  <script src="mlp.js" defer></script>
+</body>
+</html>
